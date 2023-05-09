@@ -37,11 +37,14 @@ module.exports.createCard = (req, res) => {
 module.exports.deleteCard = (req, res) => {
 
   card.findByIdAndRemove(req.params.cardId)
-    .then(card => res.send(card))
+    .then((card) => {
+      card
+      ? res.send(card)
+      : res.status(errorCode404).send(errorCodeCardMessage404)})
     .catch((err) => {
       
       err.name === 'CastError'
-      ? res.status(errorCode404).send(errorCodeCardMessage404)
+      ? res.status(errorCode400).send(errorCodeMessage400)
       : res.status(errorCode500).send(errorCodeMessage500)
     });
 };
@@ -52,7 +55,10 @@ module.exports.likeCard = (req, res) => {
     req.params.cardId,
     { $addToSet: { likes: req.user._id } },
     { new: true })
-  .then(card => res.send(card))
+  .then((card) => {
+    card
+    ? res.send(card)
+    : res.status(errorCode404).send(errorCodeCardMessage404)})
   .catch((err) => {
     
     err.name === 'CastError'
@@ -67,7 +73,10 @@ module.exports.deleteLikeCard = (req, res) => {
     req.params.cardId,
     { $pull: { likes: req.user._id } },
     { new: true })
-  .then(card => res.send(card))
+  .then((card) => {
+    card
+    ? res.send(card)
+    : res.status(errorCode404).send(errorCodeCardMessage404)})
   .catch((err) => {
     
     err.name === 'CastError'

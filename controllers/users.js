@@ -27,7 +27,7 @@ module.exports.getUser = (req, res) => {
     .catch((err) => {
     
     err.name === 'CastError'
-    ? res.status(errorCode404).send(errorCodeUserMessage404)
+    ? res.status(errorCode400).send(errorCodeMessage400)
     : res.status(errorCode500).send(errorCodeMessage500)
   });
 };

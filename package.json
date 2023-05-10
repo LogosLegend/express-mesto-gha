@@ -1,10 +1,15 @@
 {
   "name": "mesto-react",
+  "author": {
+    "name": "Valery Gaidak",
+    "url": "https://github.com/LogosLegend/express-mesto-gha"
+  },
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "start": "nodemon app.js",
-    "dev": "nodemon app.js"
+    "dev": "nodemon app.js",
+    "lint": "npx eslint ."
   },
   "dependencies": {
     "body-parser": "^1.20.2",

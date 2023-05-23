@@ -1,10 +1,8 @@
-const errorCode400 = 400,
-      errorCode404 = 404,
-      errorCode500 = 500,
-      errorCodeMessage400 = { message: 'Переданы некорректные данные' },
+const errorCodeMessage400 = { message: 'Переданы некорректные данные' },
+      errorCodeMessage401 = { message: 'Неверный email или пароль' },
       errorCodeUserMessage404 = { message: 'Пользователь не найден' },
       errorCodeCardMessage404 = { message: 'Карточка не найдена' },
-      errorCodeMessage500 = { message: 'На сервере произошла ошибка' };
+      errorCodeMessage409 = { message: 'Пользователь уже зарегистрирован' };
 
 
-module.exports = { errorCode400, errorCode404, errorCode500, errorCodeMessage400, errorCodeUserMessage404, errorCodeCardMessage404, errorCodeMessage500 };
+module.exports = { errorCodeMessage400, errorCodeMessage401, errorCodeUserMessage404, errorCodeCardMessage404, errorCodeMessage409 };

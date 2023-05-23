@@ -1,26 +1,23 @@
 const card = require('../models/card.js');
 
+const BadRequest = require('../errors/BadRequest'),
+      NotFoundError = require('../errors/NotFoundError')
+
 const {
 
-  errorCode400,
-  errorCode404,
-  errorCode500,
   errorCodeMessage400,
-  errorCodeCardMessage404,
-  errorCodeMessage500
+  errorCodeCardMessage404
   
 } = require('../utils/constants.js');
 
-module.exports.getCards = (req, res) => {
+module.exports.getCards = (req, res, next) => {
 
   card.find({})
     .then(card => res.send(card))
-    .catch((err) => {
-      res.status(errorCode500).send(errorCodeMessage500)
-    });
+    .catch(next);
 };
 
-module.exports.createCard = (req, res) => {
+module.exports.createCard = (req, res, next) => {
 
   const { name, link } = req.body;
 
@@ -29,58 +26,61 @@ module.exports.createCard = (req, res) => {
     .catch((err) => {
       
       err.name === 'ValidationError'
-      ? res.status(errorCode400).send(errorCodeMessage400)
-      : res.status(errorCode500).send(errorCodeMessage500)
+      ? next(new BadRequest(errorCodeMessage400))
+      : next()
     });
 };
 
-module.exports.deleteCard = (req, res) => {
+module.exports.deleteCard = (req, res, next) => {
 
   card.findByIdAndRemove(req.params.cardId)
     .then((card) => {
       card
       ? res.send(card)
-      : res.status(errorCode404).send(errorCodeCardMessage404)})
+      : next(new NotFoundError(errorCodeCardMessage404))
     .catch((err) => {
       
       err.name === 'CastError'
-      ? res.status(errorCode400).send(errorCodeMessage400)
-      : res.status(errorCode500).send(errorCodeMessage500)
+      ? next(new BadRequest(errorCodeMessage400))
+      : next()
     });
-};
+  });
+}
 
-module.exports.likeCard = (req, res) => {
+module.exports.likeCard = (req, res, next) => {
 
   card.findByIdAndUpdate(
     req.params.cardId,
     { $addToSet: { likes: req.user._id } },
     { new: true })
-  .then((card) => {
-    card
-    ? res.send(card)
-    : res.status(errorCode404).send(errorCodeCardMessage404)})
-  .catch((err) => {
-    
-    err.name === 'CastError'
-    ? res.status(errorCode400).send(errorCodeMessage400)
-    : res.status(errorCode500).send(errorCodeMessage500)
+    .then((card) => {
+      card
+      ? res.send(card)
+      : next(new NotFoundError(errorCodeCardMessage404))
+    .catch((err) => {
+      
+      err.name === 'CastError'
+      ? next(new BadRequest(errorCodeMessage400))
+      : next()
+    });
   });
-};
+}
 
-module.exports.deleteLikeCard = (req, res) => {
+module.exports.deleteLikeCard = (req, res, next) => {
 
   card.findByIdAndUpdate(
     req.params.cardId,
     { $pull: { likes: req.user._id } },
     { new: true })
-  .then((card) => {
-    card
-    ? res.send(card)
-    : res.status(errorCode404).send(errorCodeCardMessage404)})
-  .catch((err) => {
-    
-    err.name === 'CastError'
-    ? res.status(errorCode400).send(errorCodeMessage400)
-    : res.status(errorCode500).send(errorCodeMessage500)
+    .then((card) => {
+      card
+      ? res.send(card)
+      : next(new NotFoundError(errorCodeCardMessage404))
+    .catch((err) => {
+      
+      err.name === 'CastError'
+      ? next(new BadRequest(errorCodeMessage400))
+      : next()
   });
-};
+  });
+}

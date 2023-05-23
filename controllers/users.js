@@ -1,55 +1,71 @@
-const user = require('../models/user.js');
+const bcrypt = require('bcryptjs'),
+      jwt = require('jsonwebtoken'),
+      user = require('../models/user');
+
+const BadRequest = require('../errors/BadRequest'),
+      NotFoundError = require('../errors/NotFoundError'),
+      Unauthorized = require('../errors/Unauthorized'),
+      Conflict = require('../errors/Conflict');
+
+const { NODE_ENV, JWT_SECRET } = process.env;
 
 const {
 
-  errorCode400,
-  errorCode404,
-  errorCode500,
   errorCodeMessage400,
+  errorCodeMessage401,
   errorCodeUserMessage404,
-  errorCodeMessage500
+  errorCodeMessage409
   
 } = require('../utils/constants.js');
 
-module.exports.getUsers = (req, res) => {
+module.exports.getUsers = (req, res, next) => {
 	
   user.find({})
     .then(user => res.send(user))
-    .catch((err) => {
-      res.status(errorCode500).send(errorCodeMessage500)
-    });
+    .catch(next);
 };
 
-module.exports.getUser = (req, res) => {
+module.exports.getUser = (req, res, next) => {
+
+  user.findById(req.user._id)
+    .then(user => res.send(user))
+    .catch(BadRequest(errorCodeMessage400));
+};
+
+module.exports.getUserId = (req, res, next) => {
 
   user.findById(req.params.userId)
     .then((user) => {
       user
       ? res.send(user)
-      : res.status(errorCode404).send(errorCodeUserMessage404)})
+      : next(new NotFoundError(errorCodeUserMessage404))
     .catch((err) => {
     
     err.name === 'CastError'
-    ? res.status(errorCode400).send(errorCodeMessage400)
-    : res.status(errorCode500).send(errorCodeMessage500)
+    ? next(new BadRequest(errorCodeMessage400))
+    : next(err)
+    });
   });
 };
 
-module.exports.createUser = (req, res) => {
+module.exports.createUser = (req, res, next) => {
 
-  const { name, about, avatar } = req.body;
+  const { name, about, avatar, email, password } = req.body;
 
-  user.create({ name, about, avatar })
+  bcrypt.hash(password, 10)
+    .then(hash => user.create({name, about, avatar, email, password: hash}))
     .then(user => res.send(user))
     .catch((err) => {
       
       err.name === 'ValidationError'
-      ? res.status(errorCode400).send(errorCodeMessage400)
-      : res.status(errorCode500).send(errorCodeMessage500)
+      ? next(new BadRequest(errorCodeMessage400))
+      : err.code === 11000
+        ? next(new Conflict(errorCodeMessage409))
+        : next(err)
     });
 };
 
-module.exports.updateUserInfo = (req, res) => {
+module.exports.updateUserInfo = (req, res, next) => {
 
   const { name, about } = req.body;
 
@@ -61,14 +77,14 @@ module.exports.updateUserInfo = (req, res) => {
   .catch((err) => {
     
     err.name === 'ValidationError'
-    ? res.status(errorCode400).send(errorCodeMessage400)
+    ? next(new BadRequest(errorCodeMessage400))
     : err.name === 'CastError'
-      ? res.status(errorCode404).send(errorCodeUserMessage404)
-      : res.status(errorCode500).send(errorCodeMessage500)
+      ? next(new NotFoundError(errorCodeUserMessage404))
+      : next(err)
   });
 };
 
-module.exports.updateUserAvatar = (req, res) => {
+module.exports.updateUserAvatar = (req, res, next) => {
 
   const { avatar } = req.body;
 
@@ -80,9 +96,28 @@ module.exports.updateUserAvatar = (req, res) => {
   .catch((err) => {
     
     err.name === 'ValidationError'
-    ? res.status(errorCode400).send(errorCodeMessage400)
+    ? next(new BadRequest(errorCodeMessage400))
     : err.name === 'CastError'
-      ? res.status(errorCode404).send(errorCodeUserMessage404)
-      : res.status(errorCode500).send(errorCodeMessage500)
+      ? next(new NotFoundError(errorCodeUserMessage404))
+      : next(err)
   });
+};
+
+module.exports.login = (req, res, next) => {
+
+  const { email, password } = req.body;
+
+  user.findUserByCredentials(email, password)
+    .then(user => {
+
+      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', {expiresIn: '7d'});
+
+      res.cookie("jwt", token, {
+        httpOnly: true,
+        sameSite: "none"
+      });
+    })
+    .catch((err) => {
+      next(new Unauthorized(errorCodeMessage401))
+    });
 };

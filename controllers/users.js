@@ -117,7 +117,7 @@ module.exports.login = (req, res, next) => {
         sameSite: "none"
       }).send({ message: "Вход выполнен"})
     })
-    .catch((err) => {
+    .catch(() => {
       next(new Unauthorized(errorCodeMessage401))
     });
 };

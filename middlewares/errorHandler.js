@@ -1,4 +1,4 @@
-module.exports.errorHandler = (err, req, res, next) => {
+module.exports.errorHandler = (err, req, res) => {
 
   const { statusCode = 500, message } = err;
 

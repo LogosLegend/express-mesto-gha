@@ -6,13 +6,13 @@ router.get('/users', getUsers);
 
 router.get('/users/me', celebrate({
   params: Joi.object().keys({
-    _id: Joi.string().required().length(24)
+    _id: Joi.string().required().length(24).hex()
   }),
 }), getUser);
 
 router.get('/users/:userId', celebrate({
   params: Joi.object().keys({
-    userId: Joi.string().required().length(24)
+    userId: Joi.string().required().length(24).hex()
   }),
 }), getUserId);
 
@@ -25,7 +25,7 @@ router.patch('/users/me', celebrate({
 
 router.patch('/users/me/avatar', celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string().required().pattern(/https?:\/\/(www\.)?[a-zA-Z0-9-_~:\/?#\[\]@!$&'()*+,;=]{1,}\.[a-zA-Z]{1,}\/[a-zA-Z0-9-_~:\/?#\[\]@!$&'()*+,;=]{1,}/i),
+    avatar: Joi.string().required().pattern(/https?:\/\/(www\.)?[a-zA-Z0-9-_~:\/?#\[\]@!$&'()*+,;=]{1,}\.[a-zA-Z0-9.\-_~:\/?#\[\]@!$&'()*+,;=]{1,}/i),
   }),
 }), updateUserAvatar);
 

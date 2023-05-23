@@ -6,7 +6,6 @@ const userSchema = new mongoose.Schema({
   
   name: {
     type: String,
-    required: true,
     minlength: 2,
     maxlength: 30,
     default: 'Жак-Ив Кусто'
@@ -14,7 +13,6 @@ const userSchema = new mongoose.Schema({
 
   about: {
     type: String,
-    required: true,
     minlength: 2,
     maxlength: 30,
     default: 'Исследователь'
@@ -22,10 +20,9 @@ const userSchema = new mongoose.Schema({
 
   avatar: {
     type: String,
-    required: true,
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
     validate: {
-      validator: (v) => /https?:\/\/(www\.)?[a-zA-Z0-9-_~:\/?#\[\]@!$&'()*+,;=]{1,}\.[a-zA-Z]{1,}\/[a-zA-Z0-9-_~:\/?#\[\]@!$&'()*+,;=]{1,}/i.test(v),
+      validator: (v) => /https?:\/\/(www\.)?[a-zA-Z0-9-_~:\/?#\[\]@!$&'()*+,;=]{1,}\.[a-zA-Z0-9.\-_~:\/?#\[\]@!$&'()*+,;=]{1,}/i.test(v),
       message: 'Неправильный формат ссылки'
     },
   },
@@ -45,7 +42,7 @@ const userSchema = new mongoose.Schema({
     required: true,
     select: false
   }
-});
+}, { toObject: { useProjection: true }, toJSON: { useProjection: true }});
 
 userSchema.statics.findUserByCredentials = function (email, password) {
 
@@ -54,8 +51,6 @@ userSchema.statics.findUserByCredentials = function (email, password) {
       if (!user) {
         return Promise.reject(new Error('Неправильные почта или пароль'));
       }
-
-      console.log(user.password)
 
       return bcrypt.compare(password, user.password)
         .then((matched) => {

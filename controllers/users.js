@@ -54,9 +54,9 @@ module.exports.createUser = (req, res, next) => {
 
   bcrypt.hash(password, 10)
     .then(hash => user.create({name, about, avatar, email, password: hash}))
-    .then(user => res.send(user))
+    .then(user => res.status(200).send(user))
     .catch((err) => {
-      
+
       err.name === 'ValidationError'
       ? next(new BadRequest(errorCodeMessage400))
       : err.code === 11000

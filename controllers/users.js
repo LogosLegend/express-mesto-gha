@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs'),
       jwt = require('jsonwebtoken'),
-      user = require('../models/user');
+      User = require('../models/user');
 
 const BadRequest = require('../errors/BadRequest'),
       NotFoundError = require('../errors/NotFoundError'),
@@ -20,21 +20,21 @@ const {
 
 module.exports.getUsers = (req, res, next) => {
 	
-  user.find({})
+  User.find({})
     .then(user => res.send(user))
     .catch(next);
 };
 
 module.exports.getUser = (req, res, next) => {
 
-  user.findById(req.user._id)
+  User.findById(req.user._id)
     .then(user => res.send(user))
-    .catch(BadRequest(errorCodeMessage400));
+    .catch(next);
 };
 
 module.exports.getUserId = (req, res, next) => {
 
-  user.findById(req.params.userId)
+  User.findById(req.params.userId)
     .then((user) => {
       user
       ? res.send(user)
@@ -69,7 +69,7 @@ module.exports.updateUserInfo = (req, res, next) => {
 
   const { name, about } = req.body;
 
-  user.findByIdAndUpdate(
+  User.findByIdAndUpdate(
     req.user._id,
     { name, about },
     { new: true, runValidators: true })
@@ -88,7 +88,7 @@ module.exports.updateUserAvatar = (req, res, next) => {
 
   const { avatar } = req.body;
 
-  user.findByIdAndUpdate(
+  User.findByIdAndUpdate(
     req.user._id,
     { avatar },
     { new: true, runValidators: true })
@@ -107,7 +107,7 @@ module.exports.login = (req, res, next) => {
 
   const { email, password } = req.body;
 
-  user.findUserByCredentials(email, password)
+  User.findUserByCredentials(email, password)
     .then(user => {
 
       const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', {expiresIn: '7d'});

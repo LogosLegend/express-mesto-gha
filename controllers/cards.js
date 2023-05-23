@@ -1,4 +1,4 @@
-const card = require('../models/card.js');
+const Card = require('../models/card.js');
 
 const BadRequest = require('../errors/BadRequest'),
       Forbidden = require('../errors/Forbidden'),
@@ -14,7 +14,7 @@ const {
 
 module.exports.getCards = (req, res, next) => {
 
-  card.find({})
+  Card.find({})
     .then(card => res.send(card))
     .catch(next);
 };
@@ -23,7 +23,7 @@ module.exports.createCard = (req, res, next) => {
 
   const { name, link } = req.body;
 
-  card.create({ name, link, owner: req.user._id })
+  Card.create({ name, link, owner: req.user._id })
     .then(card => res.send(card))
     .catch((err) => {
       
@@ -37,11 +37,13 @@ module.exports.deleteCard = (req, res, next) => {
 
   const { cardId } = req.params;
 
-  card.findById(cardId)
+  Card.findById(cardId)
     .then((card) => {
+      console.log(req.user._id)
+      console.log(card)
       card
-      ? req.user._id === card.owner._id
-        ? card.findByIdAndRemove(cardId)
+      ? req.user._id == card.owner._id
+        ? Card.findByIdAndRemove(cardId)
             .then(() => res.send({ message: "Удаление выполнено" }))
             .catch(next)
         : next(new Forbidden(errorCodeMessage403))
@@ -57,7 +59,7 @@ module.exports.deleteCard = (req, res, next) => {
 
 module.exports.likeCard = (req, res, next) => {
 
-  card.findByIdAndUpdate(
+  Card.findByIdAndUpdate(
     req.params.cardId,
     { $addToSet: { likes: req.user._id } },
     { new: true })
@@ -76,7 +78,7 @@ module.exports.likeCard = (req, res, next) => {
 
 module.exports.deleteLikeCard = (req, res, next) => {
 
-  card.findByIdAndUpdate(
+  Card.findByIdAndUpdate(
     req.params.cardId,
     { $pull: { likes: req.user._id } },
     { new: true })

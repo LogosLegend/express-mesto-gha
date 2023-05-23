@@ -4,11 +4,7 @@ const { getUsers, getUser, getUserId, createUser, updateUserInfo, updateUserAvat
 
 router.get('/users', getUsers);
 
-router.get('/users/me', celebrate({
-  params: Joi.object().keys({
-    _id: Joi.string().required().length(24).hex()
-  }),
-}), getUser);
+router.get('/users/me', getUser);
 
 router.get('/users/:userId', celebrate({
   params: Joi.object().keys({

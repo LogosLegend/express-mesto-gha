@@ -1,11 +1,13 @@
 const card = require('../models/card.js');
 
 const BadRequest = require('../errors/BadRequest'),
+      Forbidden = require('../errors/Forbidden'),
       NotFoundError = require('../errors/NotFoundError')
 
 const {
 
   errorCodeMessage400,
+  errorCodeMessage403,
   errorCodeCardMessage404
   
 } = require('../utils/constants.js');
@@ -33,10 +35,16 @@ module.exports.createCard = (req, res, next) => {
 
 module.exports.deleteCard = (req, res, next) => {
 
-  card.findByIdAndRemove(req.params.cardId)
+  const { cardId } = req.params;
+
+  card.findById(cardId)
     .then((card) => {
       card
-      ? res.send(card)
+      ? req.user._id === card.owner._id
+        ? card.findByIdAndRemove(cardId)
+            .then(() => res.send({ message: "Удаление выполнено" }))
+            .catch(next)
+        : next(new Forbidden(errorCodeMessage403))
       : next(new NotFoundError(errorCodeCardMessage404))
     .catch((err) => {
       

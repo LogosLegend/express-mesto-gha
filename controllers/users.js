@@ -54,7 +54,7 @@ module.exports.createUser = (req, res, next) => {
 
   bcrypt.hash(password, 10)
     .then(hash => user.create({name, about, avatar, email, password: hash}))
-    .then(user => res.status(200).send(user))
+    .then(user => res.send(user))
     .catch((err) => {
 
       err.name === 'ValidationError'
@@ -115,7 +115,7 @@ module.exports.login = (req, res, next) => {
       res.cookie("jwt", token, {
         httpOnly: true,
         sameSite: "none"
-      });
+      }).send({ message: "Вход выполнен"})
     })
     .catch((err) => {
       next(new Unauthorized(errorCodeMessage401))

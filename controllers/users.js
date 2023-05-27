@@ -130,6 +130,7 @@ module.exports.exit = (req, res, next) => {
     httpOnly: true,
     sameSite: "none",
     secure: true})
+  .then((res) => console.log(res))
   .send({ message: "Выход выполнен" })
   .catch(next);
 }

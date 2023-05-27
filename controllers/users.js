@@ -124,13 +124,12 @@ module.exports.login = (req, res, next) => {
     });
 };
 
-module.exports.exit = (req, res, next) => {
+module.exports.exit = (req, res) => {
 
   res.clearCookie('jwt', {
-    httpOnly: true,
     sameSite: "none",
-    secure: true})
+    secure: true
+  })
   .then((res) => console.log(res))
   .send({ message: "Выход выполнен" })
-  .catch(next);
 }

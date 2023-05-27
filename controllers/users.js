@@ -130,6 +130,5 @@ module.exports.exit = (req, res) => {
     sameSite: "none",
     secure: true
   })
-  .then((res) => console.log(res))
   .send({ message: "Выход выполнен" })
 }

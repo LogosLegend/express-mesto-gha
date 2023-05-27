@@ -15,11 +15,12 @@ const app = express();
 
 app.use(cors({
   origin: [
-  "http://logos.nomoredomains.rocks",
-  "https://logos.nomoredomains.rocks",
-  "http://api.logos.nomoredomains.rocks",
-  "https://api.logos.nomoredomains.rocks",
-  "localhost:3000"
+  "*"
+  // "http://logos.nomoredomains.rocks",
+  // "https://logos.nomoredomains.rocks",
+  // "http://api.logos.nomoredomains.rocks",
+  // "https://api.logos.nomoredomains.rocks",
+  // "localhost:3000"
   ],
   allowedHeaders: ["Content-Type", "Authorization"],
   method: "GET,HEAD,PUT,PATCH,POST,DELETE",

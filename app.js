@@ -7,6 +7,11 @@ const { errorHandler } = require('./middlewares/errorHandler')
 const { errors, celebrate, Joi } = require('celebrate');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
+const auth = require('./middlewares/auth');
+
+const { PORT = 3000 } = process.env;
+const app = express();
+
 const allowedCors = [
   'http://logos.nomoredomains.rocks/',
   'https://logos.nomoredomains.rocks/',
@@ -36,11 +41,6 @@ app.use(function(req, res, next) {
 
   next();
 });
-
-const auth = require('./middlewares/auth');
-
-const { PORT = 3000 } = process.env;
-const app = express();
 
 app.use(cookieParser());
 

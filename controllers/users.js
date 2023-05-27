@@ -116,7 +116,7 @@ module.exports.login = (req, res, next) => {
         httpOnly: true,
         sameSite: "none",
         maxAge: 3600000 * 24 * 7
-      }).send({ message: "Вход выполнен", token: token})
+      }).send({ message: "Вход выполнен", token})
     })
     .catch(() => {
       next(new Unauthorized(errorCodeMessage401))

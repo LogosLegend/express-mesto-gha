@@ -124,8 +124,7 @@ module.exports.login = (req, res, next) => {
     });
 };
 
-module.exports.exit = (req, res) => {
+module.exports.exit = (req, res, next) => {
 
-  res.clearCookie('jwt').send({ message: "Выход выполнен" })
-    .catch(next);
+  res.clearCookie('jwt').send({ message: "Выход выполнен" }).catch(next);
 }

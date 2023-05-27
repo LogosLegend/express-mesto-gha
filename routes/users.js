@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
-const { getUsers, getUser, getUserId, updateUserInfo, updateUserAvatar } = require('../controllers/users.js');
+const { getUsers, getUser, getUserId, updateUserInfo, updateUserAvatar, exit } = require('../controllers/users.js');
 
 router.get('/users', getUsers);
 
@@ -24,5 +24,7 @@ router.patch('/users/me/avatar', celebrate({
     avatar: Joi.string().required().pattern(/https?:\/\/(www\.)?[a-zA-Z0-9-_~:?#[\]@!$&'()*+,;=]{1,}\.[a-zA-Z0-9.\-_~:/?#[\]@!$&'()*+,;=]{1,}/i),
   }),
 }), updateUserAvatar);
+
+router.get('/exit', exit);
 
 module.exports = router;

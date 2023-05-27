@@ -123,3 +123,9 @@ module.exports.login = (req, res, next) => {
       next(new Unauthorized(errorCodeMessage401))
     });
 };
+
+module.exports.exit = (req, res) => {
+
+  res.clearCookie('jwt').send({ message: "Выход выполнен" })
+    .catch(next);
+}

@@ -114,8 +114,8 @@ module.exports.login = (req, res, next) => {
 
       res.cookie("jwt", token, {
         httpOnly: true,
-        sameSite: "true",
-
+        sameSite: "none",
+        
       }).send({ message: "Вход выполнен"})
     })
     .catch(() => {

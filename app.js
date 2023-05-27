@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const { login, createUser } = require('./controllers/users');
 const { errorHandler } = require('./middlewares/errorHandler')
 const { errors, celebrate, Joi } = require('celebrate');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const auth = require('./middlewares/auth');
 
@@ -17,6 +18,8 @@ mongoose.connect('mongodb://localhost:27017/mestodb');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(requestLogger);
 
 app.post('/signin', celebrate({
   body: Joi.object().keys({
@@ -40,6 +43,8 @@ app.use(auth);
 app.use('/', require('./routes/users'));
 app.use('/', require('./routes/cards'));
 app.use('*', (req, res) => res.status(404).send({ message: 'Страница не найдена'}));
+
+app.use(errorLogger);
 
 app.use(errors());
 

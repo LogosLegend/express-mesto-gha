@@ -24,7 +24,7 @@ app.use(function(req, res, next) {
 
   if (allowedCors.includes(origin)) {
 
-    res.header('Access-Control-Allow-Origin', origin);
+    res.header('Access-Control-Allow-Origin', "*");
   }
 
   const { method } = req;
@@ -66,7 +66,13 @@ app.post('/signup', celebrate({
     email: Joi.string().required().email(),
     password: Joi.string().required()
   }),
-}), createUser); 
+}), createUser);
+
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
 
 app.use(auth);
 

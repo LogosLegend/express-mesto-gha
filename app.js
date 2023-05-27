@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
-const { login, createUser } = require('./controllers/users');
+const { login, createUser, exit } = require('./controllers/users');
 const { errorHandler } = require('./middlewares/errorHandler')
 const { errors, celebrate, Joi } = require('celebrate');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
@@ -59,6 +59,8 @@ app.get('/crash-test', () => {
 });
 
 app.use(auth);
+
+app.get('/exit', exit);
 
 app.use('/', require('./routes/users'));
 app.use('/', require('./routes/cards'));

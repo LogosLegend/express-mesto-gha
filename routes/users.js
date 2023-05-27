@@ -25,6 +25,4 @@ router.patch('/users/me/avatar', celebrate({
   }),
 }), updateUserAvatar);
 
-router.get('/exit', exit);
-
 module.exports = router;

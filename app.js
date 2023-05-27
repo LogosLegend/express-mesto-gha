@@ -13,10 +13,10 @@ const { PORT = 3000 } = process.env;
 const app = express();
 
 const allowedCors = [
-  'http://logos.nomoredomains.rocks/',
-  'https://logos.nomoredomains.rocks/',
-  'http://api.logos.nomoredomains.rocks/',
-  'https://api.logos.nomoredomains.rocks/',
+  'http://logos.nomoredomains.rocks',
+  'https://logos.nomoredomains.rocks',
+  'http://api.logos.nomoredomains.rocks',
+  'https://api.logos.nomoredomains.rocks',
   'localhost:3000'
 ];
 

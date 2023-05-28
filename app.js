@@ -21,7 +21,7 @@ app.use(cors({
   "https://api.logos.nomoredomains.rocks",
   "http://localhost:3000"
   ],
-  allowedHeaders: ["Content-Type", "Authorization"],
+  allowedHeaders: ["Content-Type", "Content-Length", "Authorization", "Host"],
   method: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true,
 }));

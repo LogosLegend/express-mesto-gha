@@ -13,18 +13,18 @@ const auth = require('./middlewares/auth');
 const { PORT = 3000 } = process.env;
 const app = express();
 
-// app.use(cors({
-//   origin: [
-//   "http://logos.nomoredomains.rocks",
-//   "https://logos.nomoredomains.rocks",
-//   "http://api.logos.nomoredomains.rocks",
-//   "https://api.logos.nomoredomains.rocks",
-//   "http://localhost:3000"
-//   ],
-//   allowedHeaders: ["Content-Type", "Access-Control-Request-Headers", "Authorization"],
-//   method: "GET,HEAD,PUT,PATCH,POST,DELETE",
-//   credentials: true,
-// }));
+app.use(cors({
+  origin: [
+  "http://logos.nomoredomains.rocks",
+  "https://logos.nomoredomains.rocks",
+  "http://api.logos.nomoredomains.rocks",
+  "https://api.logos.nomoredomains.rocks",
+  "http://localhost:3000"
+  ],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  method: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  credentials: true,
+}));
 
 app.use(cookieParser());
 

@@ -4,7 +4,6 @@ const bcrypt = require('bcryptjs'),
 
 const BadRequest = require('../errors/BadRequest'),
       NotFoundError = require('../errors/NotFoundError'),
-      Unauthorized = require('../errors/Unauthorized'),
       Conflict = require('../errors/Conflict');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
@@ -12,7 +11,6 @@ const { NODE_ENV, JWT_SECRET } = process.env;
 const {
 
   errorCodeMessage400,
-  errorCodeMessage401,
   errorCodeUserMessage404,
   errorCodeMessage409
   
@@ -117,9 +115,7 @@ module.exports.login = (req, res, next) => {
         maxAge: 3600000 * 24 * 7
       }).send({ message: "Вход выполнен", token})
     })
-    .catch(() => {
-      next(new Unauthorized(errorCodeMessage401))
-    });
+    .catch(next)
 };
 
 module.exports.exit = (req, res) => {

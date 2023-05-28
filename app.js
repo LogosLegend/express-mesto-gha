@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
@@ -6,7 +7,11 @@ const { login, createUser, exit } = require('./controllers/users');
 const { errorHandler } = require('./middlewares/errorHandler')
 const { errors, celebrate, Joi } = require('celebrate');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
-const cors = require('cors')
+const cors = require('cors');
+
+const NotFoundError = require('./errors/NotFoundError');
+
+const { errorCodeUrlMessage404 } = require('./utils/constants.js');
 
 const auth = require('./middlewares/auth');
 
@@ -64,7 +69,7 @@ app.get('/exit', exit);
 
 app.use('/', require('./routes/users'));
 app.use('/', require('./routes/cards'));
-app.use('*', (req, res) => res.status(404).send({ message: 'Страница не найдена'}));
+app.use('*', (req, res, next) => next(new NotFoundError(errorCodeUrlMessage404)));
 
 app.use(errorLogger);
 

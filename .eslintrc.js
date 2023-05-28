@@ -5,8 +5,7 @@ module.exports = {
         "node": true
     },
     "extends": [
-        "eslint:recommended",
-        "plugin:react/recommended"
+        "eslint:recommended"
     ],
     "overrides": [
     ],
@@ -15,7 +14,6 @@ module.exports = {
         "sourceType": "module"
     },
     "plugins": [
-        "react"
     ],
     "rules": {
     }

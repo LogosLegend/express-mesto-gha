@@ -29,7 +29,7 @@ module.exports.createCard = (req, res, next) => {
       
       err.name === 'ValidationError'
       ? next(new BadRequest(errorCodeMessage400))
-      : next()
+      : next(err)
     });
 };
 
@@ -52,7 +52,7 @@ module.exports.deleteCard = (req, res, next) => {
       
       err.name === 'CastError'
       ? next(new BadRequest(errorCodeMessage400))
-      : next()
+      : next(err)
     });
   });
 }
@@ -71,7 +71,7 @@ module.exports.likeCard = (req, res, next) => {
       
       err.name === 'CastError'
       ? next(new BadRequest(errorCodeMessage400))
-      : next()
+      : next(err)
     });
   });
 }
@@ -90,7 +90,7 @@ module.exports.deleteLikeCard = (req, res, next) => {
       
       err.name === 'CastError'
       ? next(new BadRequest(errorCodeMessage400))
-      : next()
+      : next(err)
   });
   });
 }

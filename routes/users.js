@@ -26,5 +26,3 @@ router.patch('/users/me/avatar', celebrate({
 }), updateUserAvatar);
 
 module.exports = router;
-
-scp -r .eslintrc.js logos@51.250.75.28:/home/logos/express-mesto-gha

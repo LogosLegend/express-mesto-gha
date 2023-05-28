@@ -5,7 +5,6 @@ const Unauthorized = require('../errors/Unauthorized');
 module.exports = (req, res, next) => {
 
   const token = req.cookies.jwt;
-  console.log(req);
   let payload;
 
   try {

@@ -38,7 +38,7 @@ module.exports.deleteCard = (req, res, next) => {
   Card.findById(cardId)
     .then((card) => {
       if (card) {
-        if (req.user._id === card.owner._id) {
+        if (req.user._id === card.owner._id.toString()) {
           Card.findByIdAndRemove(cardId)
             .then(() => res.send({ message: 'Удаление выполнено' }))
             .catch(next);

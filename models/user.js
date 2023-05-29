@@ -52,6 +52,15 @@ const userSchema = new mongoose.Schema(
     },
   },
   {
+    toObject: {
+      useProjection: true
+    },
+
+    toJSON: {
+      useProjection: true
+    }
+  },
+  {
 
     statics: {
       findUserByCredentials(email, password) {
@@ -73,7 +82,6 @@ const userSchema = new mongoose.Schema(
       },
     },
   },
-  { toObject: { useProjection: true }, toJSON: { useProjection: true } },
 );
 
 module.exports = mongoose.model('user', userSchema);

@@ -53,14 +53,12 @@ const userSchema = new mongoose.Schema(
   },
   {
     toObject: {
-      useProjection: true
+      useProjection: true,
     },
 
     toJSON: {
-      useProjection: true
-    }
-  },
-  {
+      useProjection: true,
+    },
 
     statics: {
       findUserByCredentials(email, password) {

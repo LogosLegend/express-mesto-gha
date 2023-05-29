@@ -6,7 +6,7 @@ const cardSchema = new mongoose.Schema({
     type: String,
     required: true,
     minlength: 2,
-    maxlength: 30
+    maxlength: 30,
   },
 
   link: {
@@ -14,24 +14,24 @@ const cardSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator: (v) => /https?:\/\/(www\.)?[a-zA-Z0-9-_~:?#[\]@!$&'()*+,;=]{1,}\.[a-zA-Z0-9.\-_~:/?#[\]@!$&'()*+,;=]{1,}/i.test(v),
-      message: 'Неправильный формат ссылки'
+      message: 'Неправильный формат ссылки',
     },
   },
 
   owner: {
     type: mongoose.Schema.Types.ObjectId,
-    required: true
+    required: true,
   },
 
   likes: {
     type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'user' }],
-    default: []
+    default: [],
   },
 
   createdAt: {
     type: Date,
-    default: Date.now
-  }
+    default: Date.now,
+  },
 });
 
 module.exports = mongoose.model('card', cardSchema);

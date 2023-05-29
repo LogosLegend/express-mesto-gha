@@ -1,17 +1,17 @@
-require('dotenv').config()
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
-const { login, createUser, exit } = require('./controllers/users');
-const { errorHandler } = require('./middlewares/errorHandler')
 const { errors, celebrate, Joi } = require('celebrate');
-const { requestLogger, errorLogger } = require('./middlewares/logger');
 const cors = require('cors');
+const { login, createUser, exit } = require('./controllers/users');
+const { errorHandler } = require('./middlewares/errorHandler');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const NotFoundError = require('./errors/NotFoundError');
 
-const { errorCodeUrlMessage404 } = require('./utils/constants.js');
+const { errorCodeUrlMessage404 } = require('./utils/constants');
 
 const auth = require('./middlewares/auth');
 
@@ -20,15 +20,15 @@ const app = express();
 
 app.use(cors({
   origin: [
-  "http://logos.nomoredomains.rocks",
-  "https://logos.nomoredomains.rocks",
-  "http://api.logos.nomoredomains.rocks",
-  "https://api.logos.nomoredomains.rocks",
-  "http://localhost:3000"
+    'http://logos.nomoredomains.rocks',
+    'https://logos.nomoredomains.rocks',
+    'http://api.logos.nomoredomains.rocks',
+    'https://api.logos.nomoredomains.rocks',
+    'http://localhost:3000',
   ],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  method: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  credentials: true
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  method: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true,
 }));
 
 app.use(cookieParser());
@@ -49,7 +49,7 @@ app.get('/crash-test', () => {
 app.post('/signin', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
-    password: Joi.string().required()
+    password: Joi.string().required(),
   }),
 }), login);
 
@@ -59,7 +59,7 @@ app.post('/signup', celebrate({
     about: Joi.string().min(2).max(30),
     avatar: Joi.string().pattern(/https?:\/\/(www\.)?[a-zA-Z0-9-_~:?#[\]@!$&'()*+,;=]{1,}\.[a-zA-Z0-9.\-_~:/?#[\]@!$&'()*+,;=]{1,}/i),
     email: Joi.string().required().email(),
-    password: Joi.string().required()
+    password: Joi.string().required(),
   }),
 }), createUser);
 
@@ -69,12 +69,13 @@ app.get('/exit', exit);
 
 app.use('/', require('./routes/users'));
 app.use('/', require('./routes/cards'));
+
 app.use('*', (req, res, next) => next(new NotFoundError(errorCodeUrlMessage404)));
 
 app.use(errorLogger);
 
 app.use(errors());
 
-app.use(errorHandler)
+app.use(errorHandler);
 
 app.listen(PORT);
